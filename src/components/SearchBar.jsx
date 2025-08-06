@@ -1,5 +1,21 @@
+import { useState } from 'react'
+
 export default function SearchBar({ searchTerm, setSearchTerm }) {
-  let userInput = "";
+  const [userInput, setUserInput] = useState('');
+  const handleEnter = (event) => {
+    if (event.key === "Enter") {
+      setSearchTerm(userInput); 
+           
+      }
+      console.log(searchTerm);
+    };
+  const handleClick = () => {
+    setSearchTerm(userInput);
+    console.log(searchTerm);
+  };
+  const handleOnInput = (event) => {
+    setUserInput(event.target.value)
+   };
 
   return (
     <>
@@ -7,24 +23,12 @@ export default function SearchBar({ searchTerm, setSearchTerm }) {
         <input
           type="text"
           value={userInput}
-          onInput={(event) => (userInput = event.target.value)}
+          onChange={handleOnInput}
           placeholder="Search for a word."
           className="search-input"
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              setSearchTerm(userInput);
-              console.log(searchTerm);
-            }
-          }}
+          onKeyUp={handleEnter}
         />
-        <button
-          onClick={() => {
-            setSearchTerm(userInput);
-            console.log(searchTerm);
-          }}
-        >
-          Search
-        </button>
+        <button onClick={handleClick}>Search</button>
       </div>
     </>
   );
