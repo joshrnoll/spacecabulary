@@ -4,9 +4,10 @@ import SearchBar from "../components/SearchBar";
 
 export default function AddCardPage() {
   const navigate = useNavigate();
-  const [wordData, setWordData] = useState([]);
+  const [wordData, setWordData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [displayResult, setDisplayResult] = useState(false);
+  const [wordAddedString, setWordAddedString] = useState("");
 
   const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${searchTerm}`;
   useEffect(() => {
@@ -14,10 +15,8 @@ export default function AddCardPage() {
       await fetch(url)
         .then((res) => res.json())
         .then((data) => {
-
           // const findExample = data[0].meanings[0].definitions.find(item => item.example !== null);
           // console.log("Find Example: ",findExample);
-
 
           setWordData({
             word: searchTerm,
@@ -40,26 +39,46 @@ export default function AddCardPage() {
     // console.log(`example:`, wordData.example);
   }, [wordData]);
 
+  function handleAddCardClick() {
+    setWordAddedString(`The word ${searchTerm} was added...`);
+  }
+
   return (
     <>
-      {(displayResult && (<div id="search-results">
-        <h1>
-          <b>{wordData.word}</b>
-        </h1>
-        <p id="definition-header">
-          <b>Definition: </b>
-        </p>
-        <p>
-          <i>"{wordData.definition}"</i>
-        </p >
-      </div>))}
+      {displayResult && (
+        <div id="search-results">
+          <h1>
+            <b>{wordData.word}</b>
+          </h1>
+          <p id="definition-header">
+            <b>Definition: </b>
+          </p>
+          <p>
+            <i>"{wordData.definition}"</i>
+          </p>
+          <p>
+            {wordAddedString.length > 0 && (
+              <p>
+                <b>{wordAddedString}</b>
+              </p>
+            )}
+          </p>
+          <button onClick={handleAddCardClick}>Add to Deck</button>
+        </div>
+      )}
 
+      <br />
+      <br />
+      <br />
+      <br />
 
-      <SearchBar setSearchTerm={setSearchTerm} setDisplayResult={setDisplayResult} />
+      <SearchBar
+        setSearchTerm={setSearchTerm}
+        setDisplayResult={setDisplayResult}
+      />
       <button id="back-button" onClick={() => navigate("/")}>
         Go back!
       </button>
-
     </>
   );
 }
