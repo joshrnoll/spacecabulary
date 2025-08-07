@@ -1,20 +1,21 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 export default function SearchBar({ setSearchTerm, setDisplayResult }) {
-  const [userInput, setUserInput] = useState('');
+  const [userInput, setUserInput] = useState("");
   const handleEnter = (event) => {
     if (event.key === "Enter") {
       setSearchTerm(userInput);
       setDisplayResult(true);
-      }
-    };
+    }
+  };
+
   const handleClick = () => {
     setSearchTerm(userInput);
     setDisplayResult(true);
-
   };
+
   const handleOnInput = (event) => {
-    setUserInput(event.target.value)
+    setUserInput(event.target.value);
   };
 
   return (

@@ -8,8 +8,15 @@ export default function AddCardPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [displayResult, setDisplayResult] = useState(false);
   const [wordAddedString, setWordAddedString] = useState("");
+  let mockDeck = [
+    {
+      word: "test word",
+      definition: "it poops",
+    },
+  ];
 
   const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${searchTerm}`;
+
   useEffect(() => {
     async function getWordData() {
       await fetch(url)
@@ -39,8 +46,8 @@ export default function AddCardPage() {
     // console.log(`example:`, wordData.example);
   }, [wordData]);
 
-  function handleAddCardClick() {
-    setWordAddedString(`The word ${searchTerm} was added...`);
+  function addWord(theWordToAdd) {
+    mockDeck.push(theWordToAdd);
   }
 
   return (
@@ -56,14 +63,12 @@ export default function AddCardPage() {
           <p>
             <i>"{wordData.definition}"</i>
           </p>
-          <p>
-            {wordAddedString.length > 0 && (
-              <p>
-                <b>{wordAddedString}</b>
-              </p>
-            )}
-          </p>
-          <button onClick={handleAddCardClick}>Add to Deck</button>
+          {wordAddedString.length > 0 && (
+            <p>
+              <b>{wordAddedString}</b>
+            </p>
+          )}
+          <button onClick={() => addWord(wordData)}>Add to Deck</button>
         </div>
       )}
 
