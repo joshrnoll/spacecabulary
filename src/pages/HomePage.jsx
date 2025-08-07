@@ -23,6 +23,8 @@ function HomePage() {
       </DeckContext.Provider>
     </>
   );
+  );
 }
 
+export default HomePage;
 export default HomePage;
