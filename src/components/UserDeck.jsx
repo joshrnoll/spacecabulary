@@ -1,14 +1,17 @@
 import { dummyData } from "../utils/userDeck-dummyData";
-import { useState } from "react";
-//import { UserDeck } from "../classes/userDeck.js";
+import { useState, useEffect } from "react";
+import { UserDeck } from "../classes/userDeck.js";
 
 export default function HomePage() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [deckCompleted, setDeckCompleted] = useState(false);
   const [index, setIndex] = useState(0);
 
-  //let deckData = new UserDeck()
-  let deckData = dummyData;
+  let deckData = new UserDeck()
+  for(let word of dummyData) {
+    deckData.addWord(word);
+  }
+  console.log(deckData);
   let deckLength = deckData.length;
   let wordOrDefinition = "";
 
@@ -20,21 +23,54 @@ export default function HomePage() {
   const handleNextCard = () => {
     let number = index;
     setIndex(number += 1);
+    console.log(`Length ${deckData.words.length}`)
+    console.log(`Index ${index}`)
     setShowAnswer(false);
-    if(index === deckLength-1) {
-      setDeckCompleted(true)
+    let result = 0;
+    for(let word of deckData.words) {
+      if(word.hidden) {
+        result += 1;
+      }
+      if(result === deckData.words.length) {
+        setDeckCompleted(true);
+      }
     }
   }
+  const handleCorrect = () => {
+    let currentWord = deckData.words[index];
+    console.log(currentWord);
+    deckData.correctWord(currentWord);
+    deckData.hideWord(currentWord);
+    handleNextCard();
+  }
+  useEffect(() => {
+    if(deckCompleted) return;
+    let number = index;
+    if(deckData.words[index].hidden) {
+    setIndex(number += 1);
+    }
+    if(index >= deckData.words.length) {
+      if(!deckCompleted) {
+        console.log(deckCompleted);
+        setIndex(0);
+      }
+    }
+  }, [index])
+
     return (
     <>
-      {!deckCompleted && 
+      {!deckCompleted && !deckData.words[index].hidden &&
             <div id="userDeck">
         <h2>Your Deck</h2>
-        {!showAnswer && <p>{dummyData[index].word}</p>}
-        {showAnswer && <p>{dummyData[index].definition}</p>}
-        <button onClick={handleNextCard}>Correct</button>
+        {!showAnswer && <p>{deckData.words[index].word}</p>}
+        {showAnswer && <p>{deckData.words[index].definition}</p>}
+        <button onClick={handleCorrect}>Correct</button>
         <button onClick={() => showAnswer ? setShowAnswer(false) : setShowAnswer(true)}>Show {wordOrDefinition}</button>
         <button onClick={handleNextCard}>Incorrect</button>
+        <button onClick={() => {
+          deckData.hideWords();
+          console.log(deckData);
+        }}>Hide words</button>
       </div>}
        
       {deckCompleted && 
