@@ -29,6 +29,8 @@ export default function SearchBar({ setSearchTerm, setDisplayResult }) {
           className="search-input"
           onKeyUp={handleEnter}
         />
+        <br/>
+        <br/>
         <button onClick={handleClick}>Search</button>
       </div>
     </>

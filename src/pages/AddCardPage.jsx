@@ -7,15 +7,17 @@ export default function AddCardPage() {
   const [wordData, setWordData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [displayResult, setDisplayResult] = useState(false);
-  const [wordAddedString, setWordAddedString] = useState("");
-  let mockDeck = [
-    {
-      word: "test word",
-      definition: "it poops",
-    },
-  ];
+  const [ mockDeck, setMockDeck ] = useState([]);
+      // word: "test word",
+      // definition: "it poops",
+    // }])
+
 
   const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${searchTerm}`;
+
+  useEffect(() => {
+    console.log("Here's mockDeck! ", mockDeck);
+  },[mockDeck])
 
   useEffect(() => {
     async function getWordData() {
@@ -28,7 +30,7 @@ export default function AddCardPage() {
           setWordData({
             word: searchTerm,
             definition: data[0].meanings[0].definitions[0].definition,
-            // partOfSpeech: findExample.partOfSpeech,
+            partOfSpeech: data[0].meanings[0].partOfSpeech,
             // example: findExample.example
           });
         })
@@ -39,48 +41,51 @@ export default function AddCardPage() {
     getWordData();
   }, [searchTerm]);
 
-  useEffect(() => {
-    console.log(`word:`, searchTerm);
-    console.log(`definition:`, wordData.definition);
-    // console.log(`partOfSpeech:`, wordData.partOfSpeech);
-    // console.log(`example:`, wordData.example);
-  }, [wordData]);
+  function addWord() {
+    setWordData(prev =>
+      ({...prev,
+      correctCount: 0,
+      timeLastCorrect: new Date(),
+      hidden: false,
+      })
+    )
+      console.log(wordData);
 
-  function addWord(theWordToAdd) {
-    mockDeck.push(theWordToAdd);
+    setMockDeck(prev =>
+      ([...prev, wordData])
+    )
+
+    setDisplayResult(false);
   }
 
   return (
     <>
       {displayResult && (
         <div id="search-results">
-          <h1>
-            <b>{wordData.word}</b>
-          </h1>
+            <h1 style={{display: "inline",marginRight:"10px"}}>{wordData.word}</h1>
+            <h3 style={{display: "inline"}}>({wordData.partOfSpeech})</h3>
           <p id="definition-header">
             <b>Definition: </b>
           </p>
-          <p>
-            <i>"{wordData.definition}"</i>
-          </p>
-          {wordAddedString.length > 0 && (
-            <p>
-              <b>{wordAddedString}</b>
-            </p>
-          )}
+            <i>{wordData.definition}</i>
+            <br/>
+            <br/>
           <button onClick={() => addWord(wordData)}>Add to Deck</button>
+
         </div>
       )}
 
-      <br />
-      <br />
-      <br />
+      {!displayResult && Object.keys(wordData).length > 0 && ( <h1>Card Added!</h1> )}
+
+
       <br />
 
       <SearchBar
         setSearchTerm={setSearchTerm}
         setDisplayResult={setDisplayResult}
       />
+
+      <br/>
       <button id="back-button" onClick={() => navigate("/")}>
         Go back!
       </button>
