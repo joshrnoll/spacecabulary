@@ -1,21 +1,21 @@
 import { useState } from 'react'
 
-export default function SearchBar({ searchTerm, setSearchTerm }) {
+export default function SearchBar({ setSearchTerm, setDisplayResult }) {
   const [userInput, setUserInput] = useState('');
   const handleEnter = (event) => {
     if (event.key === "Enter") {
-      setSearchTerm(userInput); 
-           
+      setSearchTerm(userInput);
+      setDisplayResult(true);
       }
-      console.log(searchTerm);
     };
   const handleClick = () => {
     setSearchTerm(userInput);
-    console.log(searchTerm);
+    setDisplayResult(true);
+
   };
   const handleOnInput = (event) => {
     setUserInput(event.target.value)
-   };
+  };
 
   return (
     <>
