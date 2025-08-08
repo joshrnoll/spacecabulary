@@ -5,15 +5,12 @@ export default function HomePage() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [deckCompleted, setDeckCompleted] = useState(false);
   const [index, setIndex] = useState(0);
-  const [deckData, setDeckData] = useState([]);
 
-  setDeckData(new UserDeck().getDeck());
+  let userDeck = new UserDeck();
+  let deckData = userDeck.getDeck();
 
-  useEffect(() => {
-    console.log(`the deck: ${deckData}`);
-  }, [deckData, setDeckData]);
+  console.log(deckData);
 
-  let deckLength = deckData.length;
   let wordOrDefinition = "";
 
   if (!showAnswer) {
@@ -21,36 +18,37 @@ export default function HomePage() {
   } else {
     wordOrDefinition = "word";
   }
+
   const handleNextCard = () => {
     let number = index;
     setIndex((number += 1));
-    console.log(`Length ${deckData.words.length}`);
+    console.log(`Length ${deckData.length}`);
     console.log(`Index ${index}`);
     setShowAnswer(false);
-    let result = 0;
-    for (let word of deckData.words) {
-      if (word.hidden) {
-        result += 1;
-      }
-      if (result === deckData.words.length) {
-        setDeckCompleted(true);
-      }
+
+    const completed = deckData.find((element) => element.hidden === false);
+    if (completed) {
+      setDeckCompleted(false);
+    } else {
+      setDeckCompleted(true);
     }
   };
+
   const handleCorrect = () => {
-    let currentWord = deckData.words[index];
+    let currentWord = deckData[index];
     console.log(currentWord);
     deckData.correctWord(currentWord);
     deckData.hideWord(currentWord);
     handleNextCard();
   };
+
   useEffect(() => {
     if (deckCompleted) return;
     let number = index;
-    if (deckData.words[index].hidden) {
+    if (deckData[index].hidden) {
       setIndex((number += 1));
     }
-    if (index >= deckData.words.length) {
+    if (index >= deckData.length) {
       if (!deckCompleted) {
         console.log(deckCompleted);
         setIndex(0);
@@ -60,7 +58,7 @@ export default function HomePage() {
 
   return (
     <>
-      {!deckCompleted && !deckData[index].hidden && (
+      {!deckCompleted && (
         <div id="userDeck">
           <h2>Your Deck</h2>
           {!showAnswer && <p>{deckData[index].word}</p>}
