@@ -42,18 +42,25 @@ export default function AddCardPage() {
   }, [searchTerm]);
 
   function addWord() {
-    setWordData(prev =>
-      ({...prev,
+    
+    const word = {...wordData,
       correctCount: 0,
       timeLastCorrect: new Date(),
       hidden: false,
-      })
-    )
-      console.log(wordData);
+      deckName: 'default'  };
+    setWordData(word)
+      
 
-    setMockDeck(prev =>
-      ([...prev, wordData])
-    )
+        const storage = JSON.parse(localStorage.getItem('userDeck'))
+        
+        if(storage) {
+          storage.push(word) 
+          localStorage.setItem('userDeck',JSON.stringify(storage))
+          console.log('after addition:',storage)
+        } else {
+          localStorage.setItem('userDeck',JSON.stringify([word]))
+        }
+    
 
     setDisplayResult(false);
   }
