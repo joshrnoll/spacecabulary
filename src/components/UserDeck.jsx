@@ -5,10 +5,14 @@ export default function HomePage() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [deckCompleted, setDeckCompleted] = useState(false);
   const [index, setIndex] = useState(0);
+  const [deckData, setDeckData] = useState([]);
 
-  let deckData = new UserDeck();
+  setDeckData(new UserDeck().getDeck());
 
-  console.log(deckData);
+  useEffect(() => {
+    console.log(`the deck: ${deckData}`);
+  }, [deckData, setDeckData]);
+
   let deckLength = deckData.length;
   let wordOrDefinition = "";
 
@@ -56,11 +60,11 @@ export default function HomePage() {
 
   return (
     <>
-      {!deckCompleted && !deckData.words[index].hidden && (
+      {!deckCompleted && !deckData[index].hidden && (
         <div id="userDeck">
           <h2>Your Deck</h2>
-          {!showAnswer && <p>{deckData.words[index].word}</p>}
-          {showAnswer && <p>{deckData.words[index].definition}</p>}
+          {!showAnswer && <p>{deckData[index].word}</p>}
+          {showAnswer && <p>{deckData[index].definition}</p>}
           <button onClick={handleCorrect}>Correct</button>
           <button
             onClick={() =>
@@ -70,14 +74,14 @@ export default function HomePage() {
             Show {wordOrDefinition}
           </button>
           <button onClick={handleNextCard}>Incorrect</button>
-          <button
+          {/* <button
             onClick={() => {
               deckData.hideWords();
               console.log(deckData);
             }}
           >
             Hide words
-          </button>
+          </button> */}
         </div>
       )}
 
