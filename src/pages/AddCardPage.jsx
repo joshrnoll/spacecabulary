@@ -7,19 +7,10 @@ export default function AddCardPage() {
   const [wordData, setWordData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [displayResult, setDisplayResult] = useState(false);
-  const [ mockDeck, setMockDeck ] = useState([]);
-      // word: "test word",
-      // definition: "it poops",
-    // }])
-
-
+  
   const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${searchTerm}`;
 
-  useEffect(() => {
-    console.log("Here's mockDeck! ", mockDeck);
-  },[mockDeck])
-
-  useEffect(() => {
+   useEffect(() => {
     async function getWordData() {
       await fetch(url)
         .then((res) => res.json())

@@ -19,11 +19,14 @@ export default function HomePage() {
     wordOrDefinition = "word";
   }
 
+  useEffect(() => {
+    localStorage.setItem('userDeck',JSON.stringify(deckData))
+  }, [deckData])
+
+
   const handleNextCard = () => {
     let number = index;
     setIndex((number += 1));
-    console.log(`Length ${deckData.length}`);
-    console.log(`Index ${index}`);
     setShowAnswer(false);
 
     const completed = deckData.find((element) => element.hidden === false);
@@ -36,32 +39,37 @@ export default function HomePage() {
 
   const handleCorrect = () => {
     let currentWord = deckData[index];
-    console.log(currentWord);
-    deckData.correctWord(currentWord);
-    deckData.hideWord(currentWord);
+    userDeck.correctWord(currentWord);
+    deckData = userDeck.getDeck();
+    localStorage.setItem('userDeck',JSON.stringify(deckData))
     handleNextCard();
   };
 
-  useEffect(() => {
-    if (deckCompleted) return;
-    let number = index;
-    if (deckData[index].hidden) {
-      setIndex((number += 1));
-    }
-    if (index >= deckData.length) {
-      if (!deckCompleted) {
-        console.log(deckCompleted);
-        setIndex(0);
-      }
-    }
-  }, [index]);
+const handleIncorrectClick = () => {
+  handleNextCard();
+}
+
+  // useEffect(() => {
+  //   if (deckCompleted) return;
+  //   let number = index;
+  //   if (deckData[index].hidden) {
+  //     setIndex((number += 1));
+  //   }
+  //   if (index >= deckData.length) {
+  //     if (!deckCompleted) {
+  //       console.log(deckCompleted);
+  //       setIndex(0);
+  //     }
+  //   }
+  // }, [index]);
 
   return (
     <>
       {!deckCompleted && (
         <div id="userDeck">
           <h2>Your Deck</h2>
-          {!showAnswer && <p>{deckData[index].word}</p>}
+          
+          {!showAnswer && deckData.length > 0 (<p>{deckData[index].word}</p>)}
           {showAnswer && <p>{deckData[index].definition}</p>}
           <button onClick={handleCorrect}>Correct</button>
           <button
@@ -72,14 +80,9 @@ export default function HomePage() {
             Show {wordOrDefinition}
           </button>
           <button onClick={handleNextCard}>Incorrect</button>
-          {/* <button
-            onClick={() => {
-              deckData.hideWords();
-              console.log(deckData);
-            }}
-          >
+          <button onClick={() => {handleIncorrectClick}}>
             Hide words
-          </button> */}
+          </button>
         </div>
       )}
 
