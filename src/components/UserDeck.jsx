@@ -26,7 +26,23 @@ export default function HomePage() {
 
   const handleNextCard = () => {
     let number = index;
-    setIndex((number += 1));
+    // setIndex((number += 1));
+    number = (number + 1) % deckData.length
+
+    while(deckData[number].hidden){
+      setIndex((number += 1));
+    }
+    if(!deckData[number]){
+      let result = 0;
+      for (let word of deckData){
+        if(word.hidden){result++}
+      }
+      if (result === deckData.length){
+        setDeckCompleted(true)
+      }
+      else{setIndex(0)}
+    }
+
     setShowAnswer(false);
 
     const completed = deckData.find((element) => element.hidden === false);
@@ -45,32 +61,24 @@ export default function HomePage() {
     handleNextCard();
   };
 
-const handleIncorrectClick = () => {
-  handleNextCard();
-}
-
-  // useEffect(() => {
-  //   if (deckCompleted) return;
-  //   let number = index;
-  //   if (deckData[index].hidden) {
-  //     setIndex((number += 1));
-  //   }
-  //   if (index >= deckData.length) {
-  //     if (!deckCompleted) {
-  //       console.log(deckCompleted);
-  //       setIndex(0);
-  //     }
-  //   }
-  // }, [index]);
 
   return (
     <>
       {!deckCompleted && (
         <div id="userDeck">
           <h2>Your Deck</h2>
-          
-          {!showAnswer && deckData.length > 0 (<p>{deckData[index].word}</p>)}
+
+          {/* {!showAnswer && deckData.length > 0 && (
+              deckData
+                .filter(card => !card.hidden)
+                .map((card, index) => (
+                  <p key={index}>{card.word}</p>
+                ))
+          )} */}
+
+          {!showAnswer && deckData.length > 0 && (<p>{deckData[index].word}</p>)}
           {showAnswer && <p>{deckData[index].definition}</p>}
+
           <button onClick={handleCorrect}>Correct</button>
           <button
             onClick={() =>
@@ -80,9 +88,9 @@ const handleIncorrectClick = () => {
             Show {wordOrDefinition}
           </button>
           <button onClick={handleNextCard}>Incorrect</button>
-          <button onClick={() => {handleIncorrectClick}}>
+          {/* <button onClick={handleIncorrectClick}>
             Hide words
-          </button>
+          </button> */}
         </div>
       )}
 

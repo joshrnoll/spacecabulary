@@ -7,7 +7,7 @@ export default function AddCardPage() {
   const [wordData, setWordData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [displayResult, setDisplayResult] = useState(false);
-  
+
   const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${searchTerm}`;
 
    useEffect(() => {
@@ -33,25 +33,24 @@ export default function AddCardPage() {
   }, [searchTerm]);
 
   function addWord() {
-    
+
     const word = {...wordData,
       correctCount: 0,
       timeLastCorrect: new Date(),
       hidden: false,
       deckName: 'default'  };
     setWordData(word)
-      
+
 
         const storage = JSON.parse(localStorage.getItem('userDeck'))
-        
+
         if(storage) {
-          storage.push(word) 
+          storage.push(word)
           localStorage.setItem('userDeck',JSON.stringify(storage))
-          console.log('after addition:',storage)
         } else {
           localStorage.setItem('userDeck',JSON.stringify([word]))
         }
-    
+
 
     setDisplayResult(false);
   }
