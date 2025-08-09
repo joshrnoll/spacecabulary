@@ -20,47 +20,43 @@ export default function HomePage() {
   }
 
   useEffect(() => {
-    localStorage.setItem('userDeck',JSON.stringify(deckData))
-  }, [deckData])
+    localStorage.setItem("userDeck", JSON.stringify(deckData));
+  }, [deckData]);
 
+  const handleCorrect = () => {
+    userDeck.markCorrectWord(deckData[index]);
+    deckData = userDeck.getDeck();
+    localStorage.setItem("userDeck", JSON.stringify(deckData));
+    handleNextCard();
+  };
+
+  const handleIncorrect = () => {
+    handleNextCard();
+  };
 
   const handleNextCard = () => {
-    let number = index;
-    // setIndex((number += 1));
-    number = (number + 1) % deckData.length
+    let nextHiddenFalseIndex = deckData
+      .slice(index + 1)
+      .findIndex((word) => !word.hidden);
 
-    while(deckData[number].hidden){
-      setIndex((number += 1));
-    }
-    if(!deckData[number]){
-      let result = 0;
-      for (let word of deckData){
-        if(word.hidden){result++}
-      }
-      if (result === deckData.length){
-        setDeckCompleted(true)
-      }
-      else{setIndex(0)}
+    if (nextHiddenFalseIndex !== -1) {
+      nextHiddenFalseIndex += index + 1;
+    } else {
+      nextHiddenFalseIndex = deckData.findIndex((word) => !word.hidden);
     }
 
-    setShowAnswer(false);
-
-    const completed = deckData.find((element) => element.hidden === false);
-    if (completed) {
+    if (nextHiddenFalseIndex !== -1) {
+      setIndex(nextHiddenFalseIndex);
+      setShowAnswer(false);
       setDeckCompleted(false);
     } else {
       setDeckCompleted(true);
     }
   };
 
-  const handleCorrect = () => {
-    let currentWord = deckData[index];
-    userDeck.correctWord(currentWord);
-    deckData = userDeck.getDeck();
-    localStorage.setItem('userDeck',JSON.stringify(deckData))
-    handleNextCard();
-  };
-
+  useEffect(() => {
+    console.log(`index updated.`);
+  }, [index]);
 
   return (
     <>
@@ -68,15 +64,7 @@ export default function HomePage() {
         <div id="userDeck">
           <h2>Your Deck</h2>
 
-          {/* {!showAnswer && deckData.length > 0 && (
-              deckData
-                .filter(card => !card.hidden)
-                .map((card, index) => (
-                  <p key={index}>{card.word}</p>
-                ))
-          )} */}
-
-          {!showAnswer && deckData.length > 0 && (<p>{deckData[index].word}</p>)}
+          {!showAnswer && deckData.length > 0 && <p>{deckData[index].word}</p>}
           {showAnswer && <p>{deckData[index].definition}</p>}
 
           <button onClick={handleCorrect}>Correct</button>
@@ -87,10 +75,9 @@ export default function HomePage() {
           >
             Show {wordOrDefinition}
           </button>
+
           <button onClick={handleNextCard}>Incorrect</button>
-          {/* <button onClick={handleIncorrectClick}>
-            Hide words
-          </button> */}
+          <button onClick={handleIncorrect}>Hide words</button>
         </div>
       )}
 

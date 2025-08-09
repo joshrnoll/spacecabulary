@@ -7,7 +7,7 @@ export default function ReviewPage() {
   return (
     <>
       <h1>Review Page</h1>
-      <UserDeck></UserDeck>
+      <UserDeck />
       <br />
       <button onClick={() => navigate("/view-all-cards")}>
         View All Cards
