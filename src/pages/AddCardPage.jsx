@@ -10,7 +10,7 @@ export default function AddCardPage() {
 
   const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${searchTerm}`;
 
-   useEffect(() => {
+  useEffect(() => {
     async function getWordData() {
       await fetch(url)
         .then((res) => res.json())
@@ -33,24 +33,23 @@ export default function AddCardPage() {
   }, [searchTerm]);
 
   function addWord() {
-
-    const word = {...wordData,
+    const word = {
+      ...wordData,
       correctCount: 0,
       timeLastCorrect: new Date(),
       hidden: false,
-      deckName: 'default'  };
-    setWordData(word)
+      deckName: "default",
+    };
+    setWordData(word);
 
+    const storage = JSON.parse(localStorage.getItem("userDeck"));
 
-        const storage = JSON.parse(localStorage.getItem('userDeck'))
-
-        if(storage) {
-          storage.push(word)
-          localStorage.setItem('userDeck',JSON.stringify(storage))
-        } else {
-          localStorage.setItem('userDeck',JSON.stringify([word]))
-        }
-
+    if (storage) {
+      storage.push(word);
+      localStorage.setItem("userDeck", JSON.stringify(storage));
+    } else {
+      localStorage.setItem("userDeck", JSON.stringify([word]));
+    }
 
     setDisplayResult(false);
   }
@@ -59,21 +58,25 @@ export default function AddCardPage() {
     <>
       {displayResult && (
         <div id="search-results">
-            <h1 style={{display: "inline",marginRight:"10px"}}>{wordData.word}</h1>
-            <h3 style={{display: "inline"}}>({wordData.partOfSpeech})</h3>
+          <h1 style={{ display: "inline", marginRight: "10px" }}>
+            {wordData.word}
+          </h1>
+          <h3 style={{ display: "inline" }}>({wordData.partOfSpeech})</h3>
           <p id="definition-header">
             <b>Definition: </b>
           </p>
-            <i>{wordData.definition}</i>
-            <br/>
-            <br/>
-          <button onClick={() => addWord(wordData)}>Add to Deck</button>
-
+          <i>{wordData.definition}</i>
+          <br />
+          <br />
+          <button className="standard-btn" onClick={() => addWord(wordData)}>
+            Add to Deck
+          </button>
         </div>
       )}
 
-      {!displayResult && Object.keys(wordData).length > 0 && ( <h1>Card Added!</h1> )}
-
+      {!displayResult && Object.keys(wordData).length > 0 && (
+        <h1>Card Added!</h1>
+      )}
 
       <br />
 
@@ -82,7 +85,7 @@ export default function AddCardPage() {
         setDisplayResult={setDisplayResult}
       />
 
-      <br/>
+      <br />
       <button id="back-button" onClick={() => navigate("/")}>
         Go back!
       </button>
