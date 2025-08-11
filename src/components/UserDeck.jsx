@@ -67,7 +67,9 @@ export default function HomePage() {
           {!showAnswer && deckData.length > 0 && <p>{deckData[index].word}</p>}
           {showAnswer && <p>{deckData[index].definition}</p>}
 
-          <button onClick={handleCorrect}>Correct</button>
+          <button className="review-btn" onClick={handleCorrect}>
+            Correct
+          </button>
           <button
             onClick={() =>
               showAnswer ? setShowAnswer(false) : setShowAnswer(true)
@@ -76,8 +78,12 @@ export default function HomePage() {
             Show {wordOrDefinition}
           </button>
 
-          <button onClick={handleNextCard}>Incorrect</button>
-          <button onClick={handleIncorrect}>Hide words</button>
+          <button className="review-btn" onClick={handleNextCard}>
+            Incorrect
+          </button>
+          <button className="review-btn" onClick={handleIncorrect}>
+            Hide words
+          </button>
         </div>
       )}
 
