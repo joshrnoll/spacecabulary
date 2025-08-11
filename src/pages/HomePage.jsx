@@ -19,10 +19,18 @@ export default function HomePage() {
     <>
       {hasDeck && <h3>Total cards: {totalCardCount}</h3>}
       {!hasDeck && <h1>You have no cards!</h1>}
-      <button id="add-cards" onClick={() => navigate("/add-card-page")}>
+      <button
+        className="standard-btn"
+        id="add-cards"
+        onClick={() => navigate("/add-card-page")}
+      >
         Add Cards
       </button>
-      <button id="review-cards" onClick={() => navigate("/review-page")}>
+      <button
+        className="standard-btn"
+        id="review-cards"
+        onClick={() => navigate("/review-page")}
+      >
         Review Your Cards
       </button>
     </>
