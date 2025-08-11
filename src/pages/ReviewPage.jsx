@@ -9,7 +9,17 @@ export default function ReviewPage() {
       <h1>Review Page</h1>
       <UserDeck />
       <br />
-      <button onClick={() => navigate("/view-all-cards")}>
+      <button
+        className="standard-btn"
+        id="back-button"
+        onClick={() => navigate("/")}
+      >
+        Go back!
+      </button>
+      <button
+        className="standard-btn"
+        onClick={() => navigate("/view-all-cards")}
+      >
         View All Cards
       </button>
     </>
